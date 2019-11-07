@@ -5,7 +5,7 @@
 - установить Python 3.7 с [официального сайта](https://www.python.org/)
 - установить Telegram Bot 12.1 с помощью команды
 ```
-pip install python-telegram-bot==12.1.0
+pip3 install python-telegram-bot==12.1.0
 ```
 - подставить в `TG_TOKEN` свое значение Bot API, которое нужно получить у бота @BotFather
 - скачать NirCmd с [официального сайта](http://www.nirsoft.net/utils/nircmd.html) и разместить `nircmd.exe` в папке с ботом
