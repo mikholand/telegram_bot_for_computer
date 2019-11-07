@@ -12,7 +12,6 @@ from telegram.utils.request import Request
 
 TG_TOKEN = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
-
 CALLBACK_BUTTON1_10 = "callback_button1_10"
 CALLBACK_BUTTON2_20 = "callback_button2_20"
 CALLBACK_BUTTON3_30 = "callback_button3_30"
@@ -26,6 +25,18 @@ CALLBACK_BUTTON10_100 = "callback_button10_100"
 CALLBACK_BUTTON11_SWITCH = "callback_button11_switch"
 CALLBACK_BUTTON12_INCREASE = "callback_button12_increase"
 CALLBACK_BUTTON13_DECREASE = "callback_button13_decrease"
+CALLBACK_BUTTON14_SOUND = "callback_button14_sound"
+
+CALLBACK_BUTTON20_SCREEN = "callback_button20_screen"
+CALLBACK_BUTTON21_SCREEN_SAVER = "callback_button21_screen_saver"
+CALLBACK_BUTTON22_MONITOR_ON = "callback_button22_monitor_on"
+CALLBACK_BUTTON23_MONITOR_OFF = "callback_button23_monitor_off"
+CALLBACK_BUTTON24_MONITOR2_ON = "callback_button24_monitor2_on"
+CALLBACK_BUTTON25_MONITOR2_OFF = "callback_button25_monitor2_off"
+CALLBACK_BUTTON26_TV_ON = "callback_button26_tv_on"
+CALLBACK_BUTTON27_TV_OFF = "callback_button27_tv_off"
+CALLBACK_BUTTON28_MONITORS_ON = "callback_button28_monitors_on"
+CALLBACK_BUTTON29_MONITORS_OFF = "callback_button29_monitors_off"
 
 TITLES = {
 		CALLBACK_BUTTON1_10: "10%",
@@ -41,11 +52,37 @@ TITLES = {
 		CALLBACK_BUTTON11_SWITCH: "Вкл/выкл звук",
 		CALLBACK_BUTTON12_INCREASE: "+",
 		CALLBACK_BUTTON13_DECREASE: "-",
+		CALLBACK_BUTTON14_SOUND: "Звук",
 
+		CALLBACK_BUTTON20_SCREEN: "Экран",
+		CALLBACK_BUTTON21_SCREEN_SAVER: "Включить заставку",
+		CALLBACK_BUTTON22_MONITOR_ON: "Включить монитор",
+		CALLBACK_BUTTON23_MONITOR_OFF: "Выключить монитор",
+		CALLBACK_BUTTON24_MONITOR2_ON: "Включить монитор 2",
+		CALLBACK_BUTTON25_MONITOR2_OFF: "Выключить монитор 2",
+		CALLBACK_BUTTON26_TV_ON: "Включить телевизор",
+		CALLBACK_BUTTON27_TV_OFF: "Выключить телевизор",
+		CALLBACK_BUTTON28_MONITORS_ON: "Включить все экраны",
+		CALLBACK_BUTTON29_MONITORS_OFF: "Выключить все экраны",
 }
+
+def get_base_inline_keyboard():
+	keyboard = [
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
+		],
+	]
+	return InlineKeyboardMarkup(keyboard)
 
 def get_sound_inline_keyboard():
 	keyboard = [
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
+		],
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON11_SWITCH], callback_data=CALLBACK_BUTTON11_SWITCH),
 		],
@@ -67,7 +104,35 @@ def get_sound_inline_keyboard():
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON12_INCREASE], callback_data=CALLBACK_BUTTON12_INCREASE),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON13_DECREASE], callback_data=CALLBACK_BUTTON13_DECREASE),
 		],
-    ]
+	]
+	return InlineKeyboardMarkup(keyboard)
+
+def get_screen_inline_keyboard():
+	keyboard = [
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON21_SCREEN_SAVER], callback_data=CALLBACK_BUTTON21_SCREEN_SAVER),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON22_MONITOR_ON], callback_data=CALLBACK_BUTTON22_MONITOR_ON),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON23_MONITOR_OFF], callback_data=CALLBACK_BUTTON23_MONITOR_OFF),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON26_TV_ON], callback_data=CALLBACK_BUTTON26_TV_ON),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON27_TV_OFF], callback_data=CALLBACK_BUTTON27_TV_OFF),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON24_MONITOR2_ON], callback_data=CALLBACK_BUTTON24_MONITOR2_ON),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON25_MONITOR2_OFF], callback_data=CALLBACK_BUTTON25_MONITOR2_OFF),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON28_MONITORS_ON], callback_data=CALLBACK_BUTTON28_MONITORS_ON),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON29_MONITORS_OFF], callback_data=CALLBACK_BUTTON29_MONITORS_OFF),
+		],
+	]
 	return InlineKeyboardMarkup(keyboard)
 
 def message_handler(update: Update, context: CallbackContext):
@@ -76,6 +141,12 @@ def message_handler(update: Update, context: CallbackContext):
 
 	if  (command == '/start'):
 		update.message.reply_text(text="Этот бот предназначен для удаленного управления компьютером @mikholand \n\n Интересует? Пиши в ЛС", )
+
+	if  (command == '/keyboard'):
+		update.message.reply_text(text="Добро пожаловать!", reply_markup=get_base_inline_keyboard(), )
+
+	if  (command == '/sound'):
+		update.message.reply_text(text="Панель управления звуком", reply_markup=get_sound_inline_keyboard(), )
 
 	if  (command == '/switch_sound'):
 		subprocess.Popen(switch_sound, shell=True)
@@ -124,10 +195,40 @@ def message_handler(update: Update, context: CallbackContext):
 	if (command == '/increase'):
 		subprocess.Popen(increase, shell=True)
 		update.message.reply_text(text="Прибавил громкость", reply_markup=get_sound_inline_keyboard(), )
-
 	if (command == '/decrease'):
 		subprocess.Popen(decrease, shell=True)
 		update.message.reply_text(text="Убавил громкость", reply_markup=get_sound_inline_keyboard(), )
+
+	if  (command == '/screen'):
+		update.message.reply_text(text="Панель управления экранами", reply_markup=get_screen_inline_keyboard(), )
+
+	if (command == '/monitor_on'):
+		subprocess.Popen(monitor_on, shell=True)
+		update.message.reply_text(text="Включил монитор", reply_markup=get_screen_inline_keyboard(), )
+	if (command == '/monitor_off'):
+		subprocess.Popen(monitor_off, shell=True)
+		update.message.reply_text(text="Выключил монитор", reply_markup=get_screen_inline_keyboard(), )
+
+	if (command == '/monitor2_on'):
+		subprocess.Popen(monitor2_on, shell=True)
+		update.message.reply_text(text="Включил второй монитор", reply_markup=get_screen_inline_keyboard(), )
+	if (command == '/monitor2_off'):
+		subprocess.Popen(monitor2_off, shell=True)
+		update.message.reply_text(text="Выключил второй монитор", reply_markup=get_screen_inline_keyboard(), )
+
+	if (command == '/tv_on'):
+		subprocess.Popen(tv_on, shell=True)
+		update.message.reply_text(text="Включил телевизор", reply_markup=get_screen_inline_keyboard(), )
+	if (command == '/tv_off'):
+		subprocess.Popen(tv_off, shell=True)
+		update.message.reply_text(text="Выключил телевизор", reply_markup=get_screen_inline_keyboard(), )
+
+	if (command == '/monitors_on'):
+		subprocess.Popen(monitors_on, shell=True)
+		update.message.reply_text(text="Включил все экраны", reply_markup=get_screen_inline_keyboard(), )
+	if (command == '/monitors_off'):
+		subprocess.Popen(monitors_off, shell=True)
+		update.message.reply_text(text="Выключил все экраны", reply_markup=get_screen_inline_keyboard(), )
 
 	return
 
@@ -213,6 +314,70 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
 			text="Убавил громкость",
 			reply_markup=get_sound_inline_keyboard(),
 		)
+	elif data == CALLBACK_BUTTON14_SOUND:
+		query.edit_message_text(
+			text="Панель управления звуком",
+			reply_markup=get_sound_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON20_SCREEN:
+		query.edit_message_text(
+			text="Панель управления экранами",
+			reply_markup=get_screen_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON21_SCREEN_SAVER:
+		subprocess.Popen(screen_saver, shell=True)
+		query.edit_message_text(
+			text="Включена заставка",
+			reply_markup=get_screen_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON22_MONITOR_ON:
+		subprocess.Popen(monitor_on, shell=True)
+		query.edit_message_text(
+			text="Монитор включен",
+			reply_markup=get_screen_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON23_MONITOR_OFF:
+		subprocess.Popen(monitor_off, shell=True)
+		query.edit_message_text(
+			text="Монитор выключен",
+			reply_markup=get_screen_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON24_MONITOR2_ON:
+		subprocess.Popen(monitor2_on, shell=True)
+		query.edit_message_text(
+			text="Второй монитор включен",
+			reply_markup=get_screen_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON25_MONITOR2_OFF:
+		subprocess.Popen(monitor2_off, shell=True)
+		query.edit_message_text(
+			text="Второй монитор выключен",
+			reply_markup=get_screen_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON26_TV_ON:
+		subprocess.Popen(tv_on, shell=True)
+		query.edit_message_text(
+			text="Телевизор включен",
+			reply_markup=get_screen_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON27_TV_OFF:
+		subprocess.Popen(tv_off, shell=True)
+		query.edit_message_text(
+			text="Телевизор выключен",
+			reply_markup=get_screen_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON28_MONITORS_ON:
+		subprocess.Popen(monitors_on, shell=True)
+		query.edit_message_text(
+			text="Все экраны включены",
+			reply_markup=get_screen_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON29_MONITORS_OFF:
+		subprocess.Popen(monitors_off, shell=True)
+		query.edit_message_text(
+			text="Все экраны выключены",
+			reply_markup=get_screen_inline_keyboard(),
+		)
 
 def main():
 	print('Start')
@@ -255,6 +420,15 @@ sound90 = 'nircmd.exe setsysvolume 58977'
 sound100 = 'nircmd.exe setsysvolume 65535'
 increase = 'nircmd.exe changesysvolume 655'
 decrease = 'nircmd.exe changesysvolume -655'
+screen_saver = 'nircmd.exe monitor off'
+monitor_on = 'MultiMonitorTool.exe /TurnOn 1'
+monitor_off = 'MultiMonitorTool.exe /TurnOff 1'
+monitor2_on = 'MultiMonitorTool.exe /TurnOn 5'
+monitor2_off = 'MultiMonitorTool.exe /TurnOff 5'
+tv_on = 'MultiMonitorTool.exe /TurnOn 2'
+tv_off = 'MultiMonitorTool.exe /TurnOff 2'
+monitors_on = 'MultiMonitorTool.exe /TurnOn 1 2 5'
+monitors_off = 'MultiMonitorTool.exe /TurnOff 1 2 5'
 
 if __name__ == '__main__':
 	main()
