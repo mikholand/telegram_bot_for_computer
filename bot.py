@@ -1,4 +1,5 @@
 import subprocess
+import pyautogui
 from telegram import Bot
 from telegram import Update
 from telegram import InlineKeyboardButton
@@ -10,6 +11,7 @@ from telegram.ext import Filters
 from telegram.ext import CallbackQueryHandler
 from telegram.utils.request import Request
 
+# Подставить свое значение Bot API, которое нужно получить у бота @BotFather
 TG_TOKEN = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 CALLBACK_BUTTON1_10 = "callback_button1_10"
@@ -29,7 +31,7 @@ CALLBACK_BUTTON14_SOUND = "callback_button14_sound"
 
 CALLBACK_BUTTON20_SCREEN = "callback_button20_screen"
 CALLBACK_BUTTON21_SCREEN_SAVER = "callback_button21_screen_saver"
-#CALLBACK_BUTTON22_MONITOR_ON = "callback_button22_monitor_on"
+# CALLBACK_BUTTON22_MONITOR_ON = "callback_button22_monitor_on"
 CALLBACK_BUTTON23_MONITOR_OFF = "callback_button23_monitor_off"
 CALLBACK_BUTTON24_MONITOR2_ON = "callback_button24_monitor2_on"
 CALLBACK_BUTTON25_MONITOR2_OFF = "callback_button25_monitor2_off"
@@ -42,7 +44,17 @@ CALLBACK_BUTTON42_SYSTEM_REBOOT = "callback_button42_system_reboot"
 CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION = "callback_button43_system_lockworkstation"
 CALLBACK_BUTTON44_SYSTEM_TSDISCON = "callback_button44_system_tsdiscon"
 
-CALLBACK_USER = 000000000
+CALLBACK_BUTTON60_MPC = "callback_button60_mpc"
+CALLBACK_BUTTON61_MPC_FULL = "callback_button61_mpc_full"
+CALLBACK_BUTTON62_MPC_PLAY = "callback_button62_mpc_play"
+CALLBACK_BUTTON63_MPC_FORWARD_SMALL = "callback_button63_mpc_small"
+CALLBACK_BUTTON64_MPC_FORWARD_MEDIUM = "callback_button64_mpc_medium"
+CALLBACK_BUTTON65_MPC_FORWARD_LARGE = "callback_button65_mpc_large"
+CALLBACK_BUTTON66_MPC_BACKWARD_SMALL = "callback_button66_mpc_small"
+CALLBACK_BUTTON67_MPC_BACKWARD_MEDIUM = "callback_button67_mpc_medium"
+CALLBACK_BUTTON68_MPC_BACKWARD_LARGE = "callback_button68_mpc_large"
+
+CALLBACK_USER_ID = 000000000  # ID пользователя
 
 TITLES = {
 	CALLBACK_BUTTON1_10: "10%",
@@ -62,7 +74,7 @@ TITLES = {
 
 	CALLBACK_BUTTON20_SCREEN: "Экран",
 	CALLBACK_BUTTON21_SCREEN_SAVER: "Включить заставку",
-	#CALLBACK_BUTTON22_MONITOR_ON: "Включить монитор",
+	# CALLBACK_BUTTON22_MONITOR_ON: "Включить монитор",
 	CALLBACK_BUTTON23_MONITOR_OFF: "Выключить монитор",
 	CALLBACK_BUTTON24_MONITOR2_ON: "Включить монитор 2",
 	CALLBACK_BUTTON25_MONITOR2_OFF: "Выключить монитор 2",
@@ -74,7 +86,19 @@ TITLES = {
 	CALLBACK_BUTTON42_SYSTEM_REBOOT: "Перезагрузить компьютер",
 	CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION: "Блокировать",
 	CALLBACK_BUTTON44_SYSTEM_TSDISCON: "Смена пользователя",
+
+	CALLBACK_BUTTON60_MPC: "MPC",
+	CALLBACK_BUTTON61_MPC_FULL: "Media Player Classic",
+	CALLBACK_BUTTON62_MPC_PLAY: "Пауза/воспроизведение",
+	CALLBACK_BUTTON63_MPC_FORWARD_SMALL: ">",
+	CALLBACK_BUTTON64_MPC_FORWARD_MEDIUM: ">>",
+	CALLBACK_BUTTON65_MPC_FORWARD_LARGE: ">>>",
+	CALLBACK_BUTTON66_MPC_BACKWARD_SMALL: "<",
+	CALLBACK_BUTTON67_MPC_BACKWARD_MEDIUM: "<<",
+	CALLBACK_BUTTON68_MPC_BACKWARD_LARGE: "<<<",
+
 }
+
 
 def get_base_inline_keyboard():
 	keyboard = [
@@ -85,16 +109,21 @@ def get_base_inline_keyboard():
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
 		],
 		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON61_MPC_FULL], callback_data=CALLBACK_BUTTON60_MPC),
+		],
+		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
 		],
 	]
 	return InlineKeyboardMarkup(keyboard)
+
 
 def get_sound_inline_keyboard():
 	keyboard = [
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON60_MPC], callback_data=CALLBACK_BUTTON60_MPC),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
 		],
 		[
@@ -121,18 +150,20 @@ def get_sound_inline_keyboard():
 	]
 	return InlineKeyboardMarkup(keyboard)
 
+
 def get_screen_inline_keyboard():
 	keyboard = [
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON60_MPC], callback_data=CALLBACK_BUTTON60_MPC),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
 		],
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON21_SCREEN_SAVER], callback_data=CALLBACK_BUTTON21_SCREEN_SAVER),
 		],
 		[
-			#InlineKeyboardButton(TITLES[CALLBACK_BUTTON22_MONITOR_ON], callback_data=CALLBACK_BUTTON22_MONITOR_ON),
+			# InlineKeyboardButton(TITLES[CALLBACK_BUTTON22_MONITOR_ON], callback_data=CALLBACK_BUTTON22_MONITOR_ON),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON23_MONITOR_OFF], callback_data=CALLBACK_BUTTON23_MONITOR_OFF),
 		],
 		[
@@ -146,11 +177,44 @@ def get_screen_inline_keyboard():
 	]
 	return InlineKeyboardMarkup(keyboard)
 
+
+def get_mpc_inline_keyboard():
+	keyboard = [
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON60_MPC], callback_data=CALLBACK_BUTTON60_MPC),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON62_MPC_PLAY], callback_data=CALLBACK_BUTTON62_MPC_PLAY),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON66_MPC_BACKWARD_SMALL],
+								 callback_data=CALLBACK_BUTTON66_MPC_BACKWARD_SMALL),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON63_MPC_FORWARD_SMALL],
+								 callback_data=CALLBACK_BUTTON63_MPC_FORWARD_SMALL),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON68_MPC_BACKWARD_LARGE],
+								 callback_data=CALLBACK_BUTTON68_MPC_BACKWARD_LARGE),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON67_MPC_BACKWARD_MEDIUM],
+								 callback_data=CALLBACK_BUTTON67_MPC_BACKWARD_MEDIUM),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON64_MPC_FORWARD_MEDIUM],
+								 callback_data=CALLBACK_BUTTON64_MPC_FORWARD_MEDIUM),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON65_MPC_FORWARD_LARGE],
+								 callback_data=CALLBACK_BUTTON65_MPC_FORWARD_LARGE),
+		],
+	]
+	return InlineKeyboardMarkup(keyboard)
+
+
 def get_system_inline_keyboard():
 	keyboard = [
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON60_MPC], callback_data=CALLBACK_BUTTON60_MPC),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
 		],
 		[
@@ -172,60 +236,62 @@ def get_system_inline_keyboard():
 	]
 	return InlineKeyboardMarkup(keyboard)
 
+
 def message_handler(update: Update, context: CallbackContext):
 	command = update.message.text
-	print ('Got command: %s' % command)
+	print('Got command: %s' % command)
 
-	if  (command == '/start'):
-		update.message.reply_text(text="Этот бот предназначен для удаленного управления компьютером @mikholand \n\n Интересует? Пиши в ЛС", )
+	if (command == '/start'):
+		update.message.reply_text(
+			text="Этот бот предназначен для удаленного управления компьютером @mikholand \n\n Интересует? Пиши в ЛС", )
 
-	if  (command == '/keyboard'):
+	if (command == '/keyboard'):
 		update.message.reply_text(text="Добро пожаловать!", reply_markup=get_base_inline_keyboard(), )
 
-	if  (command == '/sound'):
+	if (command == '/sound'):
 		update.message.reply_text(text="Панель управления звуком", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/switch_sound'):
+	if (command == '/switch_sound'):
 		subprocess.Popen(switch_sound, shell=True)
 		update.message.reply_text(text="Вкл/выкл звук", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/10'):
+	if (command == '/10'):
 		subprocess.Popen(sound10, shell=True)
 		update.message.reply_text(text="10%", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/20'):
+	if (command == '/20'):
 		subprocess.Popen(sound20, shell=True)
 		update.message.reply_text(text="20%", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/30'):
+	if (command == '/30'):
 		subprocess.Popen(sound30, shell=True)
 		update.message.reply_text(text="30%", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/40'):
+	if (command == '/40'):
 		subprocess.Popen(sound40, shell=True)
 		update.message.reply_text(text="40%", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/50'):
+	if (command == '/50'):
 		subprocess.Popen(sound50, shell=True)
 		update.message.reply_text(text="50%", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/60'):
+	if (command == '/60'):
 		subprocess.Popen(sound60, shell=True)
 		update.message.reply_text(text="60%", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/70'):
+	if (command == '/70'):
 		subprocess.Popen(sound70, shell=True)
 		update.message.reply_text(text="70%", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/80'):
+	if (command == '/80'):
 		subprocess.Popen(sound80, shell=True)
 		update.message.reply_text(text="80%", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/90'):
+	if (command == '/90'):
 		subprocess.Popen(sound90, shell=True)
 		update.message.reply_text(text="90%", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/100'):
+	if (command == '/100'):
 		subprocess.Popen(sound100, shell=True)
 		update.message.reply_text(text="100%", reply_markup=get_sound_inline_keyboard(), )
 
@@ -263,23 +329,35 @@ def message_handler(update: Update, context: CallbackContext):
 	if (command == '/system'):
 		update.message.reply_text(text="Панель управления системой", reply_markup=get_system_inline_keyboard(), )
 
-	if (command == '/shutdown xxxxxxxx'):
+	if (command == '/shutdown xxxxxxxx'):  # Вместо xxxxxxxx подставить свой пароль
 		subprocess.Popen(shutdown, shell=True)
 		update.message.reply_text(text="Выключил компьютер", reply_markup=get_system_inline_keyboard(), )
 
-	if (command == '/reboot xxxxxxxx'):
+	if (command == '/reboot xxxxxxxx'):  # Вместо xxxxxxxx подставить свой пароль
 		subprocess.Popen(reboot, shell=True)
 		update.message.reply_text(text="Перезагрузил компьютер", reply_markup=get_system_inline_keyboard(), )
 
-	if (command == '/lock xxxxxxxx'):
+	if (command == '/lock xxxxxxxx'):  # Вместо xxxxxxxx подставить свой пароль
 		subprocess.Popen(lockworkstation, shell=True)
 		update.message.reply_text(text="Заблокировал компьютер", reply_markup=get_system_inline_keyboard(), )
 
-	if (command == '/change_user xxxxxxxx'):
+	if (command == '/change_user xxxxxxxx'):  # Вместо xxxxxxxx подставить свой пароль
 		subprocess.Popen(tsdiscon, shell=True)
 		update.message.reply_text(text="Вышел в меню смены пользователя", reply_markup=get_system_inline_keyboard(), )
 
+	if (command == '/mpc'):
+		update.message.reply_text(text="Панель управления Media Player Classic",
+								  reply_markup=get_mpc_inline_keyboard(), )
+
+	if (command == '/pause'):
+		pyautogui.typewrite(' ')
+		update.message.reply_text(text="Pause/Play", reply_markup=get_mpc_inline_keyboard(), )
+	if (command == '/play'):
+		pyautogui.typewrite(' ')
+		update.message.reply_text(text="Pause/Play", reply_markup=get_mpc_inline_keyboard(), )
+
 	return
+
 
 def keyboard_callback_handler(update: Update, context: CallbackContext):
 	query = update.callback_query
@@ -422,7 +500,7 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
 			reply_markup=get_system_inline_keyboard(),
 		)
 	elif data == CALLBACK_BUTTON41_SYSTEM_SHUTDOWN:
-		if user == CALLBACK_USER:
+		if user == CALLBACK_USER_ID:
 			subprocess.Popen(shutdown, shell=True)
 			query.edit_message_text(
 				text="Выключил компьютер",
@@ -434,7 +512,7 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
 				reply_markup=get_system_inline_keyboard(),
 			)
 	elif data == CALLBACK_BUTTON42_SYSTEM_REBOOT:
-		if user == CALLBACK_USER:
+		if user == CALLBACK_USER_ID:
 			subprocess.Popen(reboot, shell=True)
 			query.edit_message_text(
 				text="Перезагрузил компьютер",
@@ -446,7 +524,7 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
 				reply_markup=get_system_inline_keyboard(),
 			)
 	elif data == CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION:
-		if user == CALLBACK_USER:
+		if user == CALLBACK_USER_ID:
 			subprocess.Popen(lockworkstation, shell=True)
 			query.edit_message_text(
 				text="Блокировал компьютер",
@@ -458,7 +536,7 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
 				reply_markup=get_system_inline_keyboard(),
 			)
 	elif data == CALLBACK_BUTTON44_SYSTEM_TSDISCON:
-		if user == CALLBACK_USER:
+		if user == CALLBACK_USER_ID:
 			subprocess.Popen(tsdiscon, shell=True)
 			query.edit_message_text(
 				text="Вышел в меню смены пользователя",
@@ -469,6 +547,68 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
 				text="Для выхода в меню смены пользователя на компьютере введите следующую команду: \n\n /change_user [password]",
 				reply_markup=get_system_inline_keyboard(),
 			)
+	elif data == CALLBACK_BUTTON60_MPC:
+		query.edit_message_text(
+			text="Панель управления Media Player Classic",
+			reply_markup=get_mpc_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON62_MPC_PLAY:
+		pyautogui.typewrite(' ')
+		query.edit_message_text(
+			text="Pause/Play",
+			reply_markup=get_mpc_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON63_MPC_FORWARD_SMALL:
+		pyautogui.keyDown('right')
+		pyautogui.keyUp('right')
+		query.edit_message_text(
+			text=">",
+			reply_markup=get_mpc_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON64_MPC_FORWARD_MEDIUM:
+		pyautogui.keyDown('ctrl')
+		pyautogui.keyDown('right')
+		pyautogui.keyUp('right')
+		pyautogui.keyUp('ctrl')
+		query.edit_message_text(
+			text=">>",
+			reply_markup=get_mpc_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON65_MPC_FORWARD_LARGE:
+		pyautogui.keyDown('alt')
+		pyautogui.keyDown('right')
+		pyautogui.keyUp('right')
+		pyautogui.keyUp('alt')
+		query.edit_message_text(
+			text=">>>",
+			reply_markup=get_mpc_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON66_MPC_BACKWARD_SMALL:
+		pyautogui.keyDown('left')
+		pyautogui.keyUp('left')
+		query.edit_message_text(
+			text="<",
+			reply_markup=get_mpc_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON67_MPC_BACKWARD_MEDIUM:
+		pyautogui.keyDown('ctrl')
+		pyautogui.keyDown('left')
+		pyautogui.keyUp('left')
+		pyautogui.keyUp('ctrl')
+		query.edit_message_text(
+			text="<<",
+			reply_markup=get_mpc_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON68_MPC_BACKWARD_LARGE:
+		pyautogui.keyDown('alt')
+		pyautogui.keyDown('left')
+		pyautogui.keyUp('left')
+		pyautogui.keyUp('alt')
+		query.edit_message_text(
+			text="<<<",
+			reply_markup=get_mpc_inline_keyboard(),
+		)
+
 
 def main():
 	print('Start')
@@ -476,7 +616,7 @@ def main():
 	req = Request(
 		connect_timeout=0.5,
 		read_timeout=1.0,
-	)
+		)
 	bot = Bot(
 		token=TG_TOKEN,
 		request=req,
