@@ -36,30 +36,42 @@ CALLBACK_BUTTON25_MONITOR2_OFF = "callback_button25_monitor2_off"
 CALLBACK_BUTTON26_MONITORS_ON = "callback_button26_monitors_on"
 CALLBACK_BUTTON27_MONITORS_OFF = "callback_button27_monitors_off"
 
-TITLES = {
-    CALLBACK_BUTTON1_10: "10%",
-    CALLBACK_BUTTON2_20: "20%",
-    CALLBACK_BUTTON3_30: "30%",
-    CALLBACK_BUTTON4_40: "40%",
-    CALLBACK_BUTTON5_50: "50%",
-    CALLBACK_BUTTON6_60: "60%",
-    CALLBACK_BUTTON7_70: "70%",
-    CALLBACK_BUTTON8_80: "80%",
-    CALLBACK_BUTTON9_90: "90%",
-    CALLBACK_BUTTON10_100: "100%",
-    CALLBACK_BUTTON11_SWITCH: "Вкл/выкл звук",
-    CALLBACK_BUTTON12_INCREASE: "+",
-    CALLBACK_BUTTON13_DECREASE: "-",
-    CALLBACK_BUTTON14_SOUND: "Звук",
+CALLBACK_BUTTON40_SYSTEM = "callback_button40_system"
+CALLBACK_BUTTON41_SYSTEM_SHUTDOWN = "callback_button41_system_shutdown"
+CALLBACK_BUTTON42_SYSTEM_REBOOT = "callback_button42_system_reboot"
+CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION = "callback_button43_system_lockworkstation"
+CALLBACK_BUTTON44_SYSTEM_TSDISCON = "callback_button44_system_tsdiscon"
 
-    CALLBACK_BUTTON20_SCREEN: "Экран",
-    CALLBACK_BUTTON21_SCREEN_SAVER: "Включить заставку",
-    #CALLBACK_BUTTON22_MONITOR_ON: "Включить монитор",
-    CALLBACK_BUTTON23_MONITOR_OFF: "Выключить монитор",
-    CALLBACK_BUTTON24_MONITOR2_ON: "Включить монитор 2",
-    CALLBACK_BUTTON25_MONITOR2_OFF: "Выключить монитор 2",
-    CALLBACK_BUTTON26_MONITORS_ON: "Включить все экраны",
-    CALLBACK_BUTTON27_MONITORS_OFF: "Выключить все экраны",
+TITLES = {
+	CALLBACK_BUTTON1_10: "10%",
+	CALLBACK_BUTTON2_20: "20%",
+	CALLBACK_BUTTON3_30: "30%",
+	CALLBACK_BUTTON4_40: "40%",
+	CALLBACK_BUTTON5_50: "50%",
+	CALLBACK_BUTTON6_60: "60%",
+	CALLBACK_BUTTON7_70: "70%",
+	CALLBACK_BUTTON8_80: "80%",
+	CALLBACK_BUTTON9_90: "90%",
+	CALLBACK_BUTTON10_100: "100%",
+	CALLBACK_BUTTON11_SWITCH: "Вкл/выкл звук",
+	CALLBACK_BUTTON12_INCREASE: "+",
+	CALLBACK_BUTTON13_DECREASE: "-",
+	CALLBACK_BUTTON14_SOUND: "Звук",
+
+	CALLBACK_BUTTON20_SCREEN: "Экран",
+	CALLBACK_BUTTON21_SCREEN_SAVER: "Включить заставку",
+	#CALLBACK_BUTTON22_MONITOR_ON: "Включить монитор",
+	CALLBACK_BUTTON23_MONITOR_OFF: "Выключить монитор",
+	CALLBACK_BUTTON24_MONITOR2_ON: "Включить монитор 2",
+	CALLBACK_BUTTON25_MONITOR2_OFF: "Выключить монитор 2",
+	CALLBACK_BUTTON26_MONITORS_ON: "Включить все экраны",
+	CALLBACK_BUTTON27_MONITORS_OFF: "Выключить все экраны",
+
+	CALLBACK_BUTTON40_SYSTEM: "Система",
+	CALLBACK_BUTTON41_SYSTEM_SHUTDOWN: "Выключить компьютер",
+	CALLBACK_BUTTON42_SYSTEM_REBOOT: "Перезагрузить компьютер",
+	CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION: "Блокировать",
+	CALLBACK_BUTTON44_SYSTEM_TSDISCON: "Смена пользователя",
 }
 
 def get_base_inline_keyboard():
@@ -70,6 +82,9 @@ def get_base_inline_keyboard():
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
 		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
+		],
 	]
 	return InlineKeyboardMarkup(keyboard)
 
@@ -78,6 +93,7 @@ def get_sound_inline_keyboard():
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
 		],
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON11_SWITCH], callback_data=CALLBACK_BUTTON11_SWITCH),
@@ -108,7 +124,6 @@ def get_screen_inline_keyboard():
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON60_MPC], callback_data=CALLBACK_BUTTON60_MPC),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
 		],
 		[
@@ -125,6 +140,32 @@ def get_screen_inline_keyboard():
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON26_MONITORS_ON], callback_data=CALLBACK_BUTTON26_MONITORS_ON),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON27_MONITORS_OFF], callback_data=CALLBACK_BUTTON27_MONITORS_OFF),
+		],
+	]
+	return InlineKeyboardMarkup(keyboard)
+
+def get_system_inline_keyboard():
+	keyboard = [
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON41_SYSTEM_SHUTDOWN],
+								 callback_data=CALLBACK_BUTTON41_SYSTEM_SHUTDOWN),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON42_SYSTEM_REBOOT],
+								 callback_data=CALLBACK_BUTTON42_SYSTEM_REBOOT),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION],
+								 callback_data=CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION),
+		],
+		[
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON44_SYSTEM_TSDISCON],
+								 callback_data=CALLBACK_BUTTON44_SYSTEM_TSDISCON),
 		],
 	]
 	return InlineKeyboardMarkup(keyboard)
@@ -216,6 +257,25 @@ def message_handler(update: Update, context: CallbackContext):
 	if (command == '/monitors_off'):
 		subprocess.Popen(monitors_off, shell=True)
 		update.message.reply_text(text="Выключил все экраны", reply_markup=get_screen_inline_keyboard(), )
+
+	if (command == '/system'):
+		update.message.reply_text(text="Панель управления системой", reply_markup=get_system_inline_keyboard(), )
+
+	if (command == '/shutdown xxxxxxxx'):
+		subprocess.Popen(shutdown, shell=True)
+		update.message.reply_text(text="Выключил компьютер", reply_markup=get_system_inline_keyboard(), )
+
+	if (command == '/reboot xxxxxxxx'):
+		subprocess.Popen(reboot, shell=True)
+		update.message.reply_text(text="Перезагрузил компьютер", reply_markup=get_system_inline_keyboard(), )
+
+	if (command == '/lock xxxxxxxx'):
+		subprocess.Popen(lockworkstation, shell=True)
+		update.message.reply_text(text="Заблокировал компьютер", reply_markup=get_system_inline_keyboard(), )
+
+	if (command == '/change_user xxxxxxxx'):
+		subprocess.Popen(tsdiscon, shell=True)
+		update.message.reply_text(text="Вышел в меню смены пользователя", reply_markup=get_system_inline_keyboard(), )
 
 	return
 
@@ -353,6 +413,31 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
 			text="Все экраны выключены",
 			reply_markup=get_screen_inline_keyboard(),
 		)
+	elif data == CALLBACK_BUTTON40_SYSTEM:
+		query.edit_message_text(
+			text="Панель управления системой",
+			reply_markup=get_system_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON41_SYSTEM_SHUTDOWN:
+		query.edit_message_text(
+			text="Для выключения компьютера введите следующую команду: \n\n /shutdown [password]",
+			reply_markup=get_system_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON42_SYSTEM_REBOOT:
+		query.edit_message_text(
+			text="Для перезагрузки компьютера введите следующую команду: \n\n /reboot [password]",
+			reply_markup=get_system_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION:
+		query.edit_message_text(
+			text="Для блокировки компьютера введите следующую команду: \n\n /lock [password]",
+			reply_markup=get_system_inline_keyboard(),
+		)
+	elif data == CALLBACK_BUTTON44_SYSTEM_TSDISCON:
+		query.edit_message_text(
+			text="Для выхода в меню смены пользователя на компьютере введите следующую команду: \n\n /change_user [password]",
+			reply_markup=get_system_inline_keyboard(),
+		)
 
 def main():
 	print('Start')
@@ -402,6 +487,10 @@ monitor2_on = 'MultiMonitorTool.exe /TurnOn 5'
 monitor2_off = 'MultiMonitorTool.exe /TurnOff 5'
 monitors_on = 'MultiMonitorTool.exe /TurnOn 1 5'
 monitors_off = 'MultiMonitorTool.exe /TurnOff 1 5'
+tsdiscon = 'tsdiscon'
+lockworkstation = 'rundll32.exe User32.dll,LockWorkStation'
+shutdown = 'Shutdown.exe -s -t 00'
+reboot = 'Shutdown.exe -r -t 00'
 
 if __name__ == '__main__':
 	main()
