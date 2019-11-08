@@ -42,6 +42,8 @@ CALLBACK_BUTTON42_SYSTEM_REBOOT = "callback_button42_system_reboot"
 CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION = "callback_button43_system_lockworkstation"
 CALLBACK_BUTTON44_SYSTEM_TSDISCON = "callback_button44_system_tsdiscon"
 
+CALLBACK_USER = 000000000
+
 TITLES = {
 	CALLBACK_BUTTON1_10: "10%",
 	CALLBACK_BUTTON2_20: "20%",
@@ -282,6 +284,7 @@ def message_handler(update: Update, context: CallbackContext):
 def keyboard_callback_handler(update: Update, context: CallbackContext):
 	query = update.callback_query
 	data = query.data
+	user = query.message.chat.id
 
 	if data == CALLBACK_BUTTON1_10:
 		subprocess.Popen(sound10, shell=True)
@@ -419,25 +422,53 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
 			reply_markup=get_system_inline_keyboard(),
 		)
 	elif data == CALLBACK_BUTTON41_SYSTEM_SHUTDOWN:
-		query.edit_message_text(
-			text="Для выключения компьютера введите следующую команду: \n\n /shutdown [password]",
-			reply_markup=get_system_inline_keyboard(),
-		)
+		if user == CALLBACK_USER:
+			subprocess.Popen(shutdown, shell=True)
+			query.edit_message_text(
+				text="Выключил компьютер",
+				reply_markup=get_system_inline_keyboard(),
+			)
+		else:
+			query.edit_message_text(
+				text="Для выключения компьютера введите следующую команду: \n\n /shutdown [password]",
+				reply_markup=get_system_inline_keyboard(),
+			)
 	elif data == CALLBACK_BUTTON42_SYSTEM_REBOOT:
-		query.edit_message_text(
-			text="Для перезагрузки компьютера введите следующую команду: \n\n /reboot [password]",
-			reply_markup=get_system_inline_keyboard(),
-		)
+		if user == CALLBACK_USER:
+			subprocess.Popen(reboot, shell=True)
+			query.edit_message_text(
+				text="Перезагрузил компьютер",
+				reply_markup=get_system_inline_keyboard(),
+			)
+		else:
+			query.edit_message_text(
+				text="Для перезагрузки компьютера введите следующую команду: \n\n /reboot [password]",
+				reply_markup=get_system_inline_keyboard(),
+			)
 	elif data == CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION:
-		query.edit_message_text(
-			text="Для блокировки компьютера введите следующую команду: \n\n /lock [password]",
-			reply_markup=get_system_inline_keyboard(),
-		)
+		if user == CALLBACK_USER:
+			subprocess.Popen(lockworkstation, shell=True)
+			query.edit_message_text(
+				text="Блокировал компьютер",
+				reply_markup=get_system_inline_keyboard(),
+			)
+		else:
+			query.edit_message_text(
+				text="Для блокировки компьютера введите следующую команду: \n\n /lock [password]",
+				reply_markup=get_system_inline_keyboard(),
+			)
 	elif data == CALLBACK_BUTTON44_SYSTEM_TSDISCON:
-		query.edit_message_text(
-			text="Для выхода в меню смены пользователя на компьютере введите следующую команду: \n\n /change_user [password]",
-			reply_markup=get_system_inline_keyboard(),
-		)
+		if user == CALLBACK_USER:
+			subprocess.Popen(tsdiscon, shell=True)
+			query.edit_message_text(
+				text="Вышел в меню смены пользователя",
+				reply_markup=get_system_inline_keyboard(),
+			)
+		else:
+			query.edit_message_text(
+				text="Для выхода в меню смены пользователя на компьютере введите следующую команду: \n\n /change_user [password]",
+				reply_markup=get_system_inline_keyboard(),
+			)
 
 def main():
 	print('Start')
