@@ -29,41 +29,37 @@ CALLBACK_BUTTON14_SOUND = "callback_button14_sound"
 
 CALLBACK_BUTTON20_SCREEN = "callback_button20_screen"
 CALLBACK_BUTTON21_SCREEN_SAVER = "callback_button21_screen_saver"
-CALLBACK_BUTTON22_MONITOR_ON = "callback_button22_monitor_on"
+#CALLBACK_BUTTON22_MONITOR_ON = "callback_button22_monitor_on"
 CALLBACK_BUTTON23_MONITOR_OFF = "callback_button23_monitor_off"
 CALLBACK_BUTTON24_MONITOR2_ON = "callback_button24_monitor2_on"
 CALLBACK_BUTTON25_MONITOR2_OFF = "callback_button25_monitor2_off"
-CALLBACK_BUTTON26_TV_ON = "callback_button26_tv_on"
-CALLBACK_BUTTON27_TV_OFF = "callback_button27_tv_off"
-CALLBACK_BUTTON28_MONITORS_ON = "callback_button28_monitors_on"
-CALLBACK_BUTTON29_MONITORS_OFF = "callback_button29_monitors_off"
+CALLBACK_BUTTON26_MONITORS_ON = "callback_button26_monitors_on"
+CALLBACK_BUTTON27_MONITORS_OFF = "callback_button27_monitors_off"
 
 TITLES = {
-		CALLBACK_BUTTON1_10: "10%",
-		CALLBACK_BUTTON2_20: "20%",
-		CALLBACK_BUTTON3_30: "30%",
-		CALLBACK_BUTTON4_40: "40%",
-		CALLBACK_BUTTON5_50: "50%",
-		CALLBACK_BUTTON6_60: "60%",
-		CALLBACK_BUTTON7_70: "70%",
-		CALLBACK_BUTTON8_80: "80%",
-		CALLBACK_BUTTON9_90: "90%",
-		CALLBACK_BUTTON10_100: "100%",
-		CALLBACK_BUTTON11_SWITCH: "Вкл/выкл звук",
-		CALLBACK_BUTTON12_INCREASE: "+",
-		CALLBACK_BUTTON13_DECREASE: "-",
-		CALLBACK_BUTTON14_SOUND: "Звук",
+    CALLBACK_BUTTON1_10: "10%",
+    CALLBACK_BUTTON2_20: "20%",
+    CALLBACK_BUTTON3_30: "30%",
+    CALLBACK_BUTTON4_40: "40%",
+    CALLBACK_BUTTON5_50: "50%",
+    CALLBACK_BUTTON6_60: "60%",
+    CALLBACK_BUTTON7_70: "70%",
+    CALLBACK_BUTTON8_80: "80%",
+    CALLBACK_BUTTON9_90: "90%",
+    CALLBACK_BUTTON10_100: "100%",
+    CALLBACK_BUTTON11_SWITCH: "Вкл/выкл звук",
+    CALLBACK_BUTTON12_INCREASE: "+",
+    CALLBACK_BUTTON13_DECREASE: "-",
+    CALLBACK_BUTTON14_SOUND: "Звук",
 
-		CALLBACK_BUTTON20_SCREEN: "Экран",
-		CALLBACK_BUTTON21_SCREEN_SAVER: "Включить заставку",
-		CALLBACK_BUTTON22_MONITOR_ON: "Включить монитор",
-		CALLBACK_BUTTON23_MONITOR_OFF: "Выключить монитор",
-		CALLBACK_BUTTON24_MONITOR2_ON: "Включить монитор 2",
-		CALLBACK_BUTTON25_MONITOR2_OFF: "Выключить монитор 2",
-		CALLBACK_BUTTON26_TV_ON: "Включить телевизор",
-		CALLBACK_BUTTON27_TV_OFF: "Выключить телевизор",
-		CALLBACK_BUTTON28_MONITORS_ON: "Включить все экраны",
-		CALLBACK_BUTTON29_MONITORS_OFF: "Выключить все экраны",
+    CALLBACK_BUTTON20_SCREEN: "Экран",
+    CALLBACK_BUTTON21_SCREEN_SAVER: "Включить заставку",
+    #CALLBACK_BUTTON22_MONITOR_ON: "Включить монитор",
+    CALLBACK_BUTTON23_MONITOR_OFF: "Выключить монитор",
+    CALLBACK_BUTTON24_MONITOR2_ON: "Включить монитор 2",
+    CALLBACK_BUTTON25_MONITOR2_OFF: "Выключить монитор 2",
+    CALLBACK_BUTTON26_MONITORS_ON: "Включить все экраны",
+    CALLBACK_BUTTON27_MONITORS_OFF: "Выключить все экраны",
 }
 
 def get_base_inline_keyboard():
@@ -112,25 +108,23 @@ def get_screen_inline_keyboard():
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON60_MPC], callback_data=CALLBACK_BUTTON60_MPC),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
 		],
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON21_SCREEN_SAVER], callback_data=CALLBACK_BUTTON21_SCREEN_SAVER),
 		],
 		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON22_MONITOR_ON], callback_data=CALLBACK_BUTTON22_MONITOR_ON),
+			#InlineKeyboardButton(TITLES[CALLBACK_BUTTON22_MONITOR_ON], callback_data=CALLBACK_BUTTON22_MONITOR_ON),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON23_MONITOR_OFF], callback_data=CALLBACK_BUTTON23_MONITOR_OFF),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON26_TV_ON], callback_data=CALLBACK_BUTTON26_TV_ON),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON27_TV_OFF], callback_data=CALLBACK_BUTTON27_TV_OFF),
 		],
 		[
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON24_MONITOR2_ON], callback_data=CALLBACK_BUTTON24_MONITOR2_ON),
 			InlineKeyboardButton(TITLES[CALLBACK_BUTTON25_MONITOR2_OFF], callback_data=CALLBACK_BUTTON25_MONITOR2_OFF),
 		],
 		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON28_MONITORS_ON], callback_data=CALLBACK_BUTTON28_MONITORS_ON),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON29_MONITORS_OFF], callback_data=CALLBACK_BUTTON29_MONITORS_OFF),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON26_MONITORS_ON], callback_data=CALLBACK_BUTTON26_MONITORS_ON),
+			InlineKeyboardButton(TITLES[CALLBACK_BUTTON27_MONITORS_OFF], callback_data=CALLBACK_BUTTON27_MONITORS_OFF),
 		],
 	]
 	return InlineKeyboardMarkup(keyboard)
@@ -199,12 +193,12 @@ def message_handler(update: Update, context: CallbackContext):
 		subprocess.Popen(decrease, shell=True)
 		update.message.reply_text(text="Убавил громкость", reply_markup=get_sound_inline_keyboard(), )
 
-	if  (command == '/screen'):
+	if (command == '/screen'):
 		update.message.reply_text(text="Панель управления экранами", reply_markup=get_screen_inline_keyboard(), )
 
 	if (command == '/monitor_on'):
 		subprocess.Popen(monitor_on, shell=True)
-		update.message.reply_text(text="Включил монитор", reply_markup=get_screen_inline_keyboard(), )
+		update.message.reply_text(text="Включил монитор (не работает)", reply_markup=get_screen_inline_keyboard(), )
 	if (command == '/monitor_off'):
 		subprocess.Popen(monitor_off, shell=True)
 		update.message.reply_text(text="Выключил монитор", reply_markup=get_screen_inline_keyboard(), )
@@ -215,13 +209,6 @@ def message_handler(update: Update, context: CallbackContext):
 	if (command == '/monitor2_off'):
 		subprocess.Popen(monitor2_off, shell=True)
 		update.message.reply_text(text="Выключил второй монитор", reply_markup=get_screen_inline_keyboard(), )
-
-	if (command == '/tv_on'):
-		subprocess.Popen(tv_on, shell=True)
-		update.message.reply_text(text="Включил телевизор", reply_markup=get_screen_inline_keyboard(), )
-	if (command == '/tv_off'):
-		subprocess.Popen(tv_off, shell=True)
-		update.message.reply_text(text="Выключил телевизор", reply_markup=get_screen_inline_keyboard(), )
 
 	if (command == '/monitors_on'):
 		subprocess.Popen(monitors_on, shell=True)
@@ -330,12 +317,12 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
 			text="Включена заставка",
 			reply_markup=get_screen_inline_keyboard(),
 		)
-	elif data == CALLBACK_BUTTON22_MONITOR_ON:
-		subprocess.Popen(monitor_on, shell=True)
-		query.edit_message_text(
-			text="Монитор включен",
-			reply_markup=get_screen_inline_keyboard(),
-		)
+	# elif data == CALLBACK_BUTTON22_MONITOR_ON:
+	#	subprocess.Popen(monitor_on, shell=True)
+	#	query.edit_message_text(
+	#		text="Монитор включен",
+	#		reply_markup=get_screen_inline_keyboard(),
+	#	)
 	elif data == CALLBACK_BUTTON23_MONITOR_OFF:
 		subprocess.Popen(monitor_off, shell=True)
 		query.edit_message_text(
@@ -354,25 +341,13 @@ def keyboard_callback_handler(update: Update, context: CallbackContext):
 			text="Второй монитор выключен",
 			reply_markup=get_screen_inline_keyboard(),
 		)
-	elif data == CALLBACK_BUTTON26_TV_ON:
-		subprocess.Popen(tv_on, shell=True)
-		query.edit_message_text(
-			text="Телевизор включен",
-			reply_markup=get_screen_inline_keyboard(),
-		)
-	elif data == CALLBACK_BUTTON27_TV_OFF:
-		subprocess.Popen(tv_off, shell=True)
-		query.edit_message_text(
-			text="Телевизор выключен",
-			reply_markup=get_screen_inline_keyboard(),
-		)
-	elif data == CALLBACK_BUTTON28_MONITORS_ON:
+	elif data == CALLBACK_BUTTON26_MONITORS_ON:
 		subprocess.Popen(monitors_on, shell=True)
 		query.edit_message_text(
 			text="Все экраны включены",
 			reply_markup=get_screen_inline_keyboard(),
 		)
-	elif data == CALLBACK_BUTTON29_MONITORS_OFF:
+	elif data == CALLBACK_BUTTON27_MONITORS_OFF:
 		subprocess.Popen(monitors_off, shell=True)
 		query.edit_message_text(
 			text="Все экраны выключены",
@@ -425,10 +400,8 @@ monitor_on = 'MultiMonitorTool.exe /TurnOn 1'
 monitor_off = 'MultiMonitorTool.exe /TurnOff 1'
 monitor2_on = 'MultiMonitorTool.exe /TurnOn 5'
 monitor2_off = 'MultiMonitorTool.exe /TurnOff 5'
-tv_on = 'MultiMonitorTool.exe /TurnOn 2'
-tv_off = 'MultiMonitorTool.exe /TurnOff 2'
-monitors_on = 'MultiMonitorTool.exe /TurnOn 1 2 5'
-monitors_off = 'MultiMonitorTool.exe /TurnOff 1 2 5'
+monitors_on = 'MultiMonitorTool.exe /TurnOn 1 5'
+monitors_off = 'MultiMonitorTool.exe /TurnOff 1 5'
 
 if __name__ == '__main__':
 	main()
