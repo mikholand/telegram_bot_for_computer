@@ -1,240 +1,10 @@
 import subprocess
 import pyautogui
-from telegram import Bot
-from telegram import Update
-from telegram import InlineKeyboardButton
-from telegram import InlineKeyboardMarkup
-from telegram.ext import CallbackContext
-from telegram.ext import Updater
-from telegram.ext import MessageHandler
-from telegram.ext import Filters
-from telegram.ext import CallbackQueryHandler
+from telegram import Bot, Update
+from telegram.ext import CallbackContext, Updater, MessageHandler, Filters, CallbackQueryHandler
 from telegram.utils.request import Request
-
-# Подставить свое значение Bot API, которое нужно получить у бота @BotFather
-TG_TOKEN = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-
-CALLBACK_BUTTON1_10 = "callback_button1_10"
-CALLBACK_BUTTON2_20 = "callback_button2_20"
-CALLBACK_BUTTON3_30 = "callback_button3_30"
-CALLBACK_BUTTON4_40 = "callback_button4_40"
-CALLBACK_BUTTON5_50 = "callback_button5_50"
-CALLBACK_BUTTON6_60 = "callback_button6_60"
-CALLBACK_BUTTON7_70 = "callback_button7_70"
-CALLBACK_BUTTON8_80 = "callback_button8_80"
-CALLBACK_BUTTON9_90 = "callback_button9_90"
-CALLBACK_BUTTON10_100 = "callback_button10_100"
-CALLBACK_BUTTON11_SWITCH = "callback_button11_switch"
-CALLBACK_BUTTON12_INCREASE = "callback_button12_increase"
-CALLBACK_BUTTON13_DECREASE = "callback_button13_decrease"
-CALLBACK_BUTTON14_SOUND = "callback_button14_sound"
-
-CALLBACK_BUTTON20_SCREEN = "callback_button20_screen"
-CALLBACK_BUTTON21_SCREEN_SAVER = "callback_button21_screen_saver"
-# CALLBACK_BUTTON22_MONITOR_ON = "callback_button22_monitor_on"
-CALLBACK_BUTTON23_MONITOR_OFF = "callback_button23_monitor_off"
-CALLBACK_BUTTON24_MONITOR2_ON = "callback_button24_monitor2_on"
-CALLBACK_BUTTON25_MONITOR2_OFF = "callback_button25_monitor2_off"
-CALLBACK_BUTTON26_MONITORS_ON = "callback_button26_monitors_on"
-CALLBACK_BUTTON27_MONITORS_OFF = "callback_button27_monitors_off"
-
-CALLBACK_BUTTON40_SYSTEM = "callback_button40_system"
-CALLBACK_BUTTON41_SYSTEM_SHUTDOWN = "callback_button41_system_shutdown"
-CALLBACK_BUTTON42_SYSTEM_REBOOT = "callback_button42_system_reboot"
-CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION = "callback_button43_system_lockworkstation"
-CALLBACK_BUTTON44_SYSTEM_TSDISCON = "callback_button44_system_tsdiscon"
-
-CALLBACK_BUTTON60_MPC = "callback_button60_mpc"
-CALLBACK_BUTTON61_MPC_FULL = "callback_button61_mpc_full"
-CALLBACK_BUTTON62_MPC_PLAY = "callback_button62_mpc_play"
-CALLBACK_BUTTON63_MPC_FORWARD_SMALL = "callback_button63_mpc_small"
-CALLBACK_BUTTON64_MPC_FORWARD_MEDIUM = "callback_button64_mpc_medium"
-CALLBACK_BUTTON65_MPC_FORWARD_LARGE = "callback_button65_mpc_large"
-CALLBACK_BUTTON66_MPC_BACKWARD_SMALL = "callback_button66_mpc_small"
-CALLBACK_BUTTON67_MPC_BACKWARD_MEDIUM = "callback_button67_mpc_medium"
-CALLBACK_BUTTON68_MPC_BACKWARD_LARGE = "callback_button68_mpc_large"
-
-CALLBACK_USER_ID = 000000000  # ID пользователя
-
-TITLES = {
-	CALLBACK_BUTTON1_10: "10%",
-	CALLBACK_BUTTON2_20: "20%",
-	CALLBACK_BUTTON3_30: "30%",
-	CALLBACK_BUTTON4_40: "40%",
-	CALLBACK_BUTTON5_50: "50%",
-	CALLBACK_BUTTON6_60: "60%",
-	CALLBACK_BUTTON7_70: "70%",
-	CALLBACK_BUTTON8_80: "80%",
-	CALLBACK_BUTTON9_90: "90%",
-	CALLBACK_BUTTON10_100: "100%",
-	CALLBACK_BUTTON11_SWITCH: "Вкл/выкл звук",
-	CALLBACK_BUTTON12_INCREASE: "+",
-	CALLBACK_BUTTON13_DECREASE: "-",
-	CALLBACK_BUTTON14_SOUND: "Звук",
-
-	CALLBACK_BUTTON20_SCREEN: "Экран",
-	CALLBACK_BUTTON21_SCREEN_SAVER: "Включить заставку",
-	# CALLBACK_BUTTON22_MONITOR_ON: "Включить монитор",
-	CALLBACK_BUTTON23_MONITOR_OFF: "Выключить монитор",
-	CALLBACK_BUTTON24_MONITOR2_ON: "Включить монитор 2",
-	CALLBACK_BUTTON25_MONITOR2_OFF: "Выключить монитор 2",
-	CALLBACK_BUTTON26_MONITORS_ON: "Включить все экраны",
-	CALLBACK_BUTTON27_MONITORS_OFF: "Выключить все экраны",
-
-	CALLBACK_BUTTON40_SYSTEM: "Система",
-	CALLBACK_BUTTON41_SYSTEM_SHUTDOWN: "Выключить компьютер",
-	CALLBACK_BUTTON42_SYSTEM_REBOOT: "Перезагрузить компьютер",
-	CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION: "Блокировать",
-	CALLBACK_BUTTON44_SYSTEM_TSDISCON: "Смена пользователя",
-
-	CALLBACK_BUTTON60_MPC: "MPC",
-	CALLBACK_BUTTON61_MPC_FULL: "Media Player Classic",
-	CALLBACK_BUTTON62_MPC_PLAY: "Пауза/воспроизведение",
-	CALLBACK_BUTTON63_MPC_FORWARD_SMALL: ">",
-	CALLBACK_BUTTON64_MPC_FORWARD_MEDIUM: ">>",
-	CALLBACK_BUTTON65_MPC_FORWARD_LARGE: ">>>",
-	CALLBACK_BUTTON66_MPC_BACKWARD_SMALL: "<",
-	CALLBACK_BUTTON67_MPC_BACKWARD_MEDIUM: "<<",
-	CALLBACK_BUTTON68_MPC_BACKWARD_LARGE: "<<<",
-
-}
-
-
-def get_base_inline_keyboard():
-	keyboard = [
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON61_MPC_FULL], callback_data=CALLBACK_BUTTON60_MPC),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
-		],
-	]
-	return InlineKeyboardMarkup(keyboard)
-
-
-def get_sound_inline_keyboard():
-	keyboard = [
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON60_MPC], callback_data=CALLBACK_BUTTON60_MPC),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON11_SWITCH], callback_data=CALLBACK_BUTTON11_SWITCH),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON1_10], callback_data=CALLBACK_BUTTON1_10),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON2_20], callback_data=CALLBACK_BUTTON2_20),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON3_30], callback_data=CALLBACK_BUTTON3_30),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON4_40], callback_data=CALLBACK_BUTTON4_40),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON5_50], callback_data=CALLBACK_BUTTON5_50),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON6_60], callback_data=CALLBACK_BUTTON6_60),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON7_70], callback_data=CALLBACK_BUTTON7_70),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON8_80], callback_data=CALLBACK_BUTTON8_80),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON9_90], callback_data=CALLBACK_BUTTON9_90),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON10_100], callback_data=CALLBACK_BUTTON10_100),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON12_INCREASE], callback_data=CALLBACK_BUTTON12_INCREASE),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON13_DECREASE], callback_data=CALLBACK_BUTTON13_DECREASE),
-		],
-	]
-	return InlineKeyboardMarkup(keyboard)
-
-
-def get_screen_inline_keyboard():
-	keyboard = [
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON60_MPC], callback_data=CALLBACK_BUTTON60_MPC),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON21_SCREEN_SAVER], callback_data=CALLBACK_BUTTON21_SCREEN_SAVER),
-		],
-		[
-			# InlineKeyboardButton(TITLES[CALLBACK_BUTTON22_MONITOR_ON], callback_data=CALLBACK_BUTTON22_MONITOR_ON),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON23_MONITOR_OFF], callback_data=CALLBACK_BUTTON23_MONITOR_OFF),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON24_MONITOR2_ON], callback_data=CALLBACK_BUTTON24_MONITOR2_ON),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON25_MONITOR2_OFF], callback_data=CALLBACK_BUTTON25_MONITOR2_OFF),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON26_MONITORS_ON], callback_data=CALLBACK_BUTTON26_MONITORS_ON),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON27_MONITORS_OFF], callback_data=CALLBACK_BUTTON27_MONITORS_OFF),
-		],
-	]
-	return InlineKeyboardMarkup(keyboard)
-
-
-def get_mpc_inline_keyboard():
-	keyboard = [
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON60_MPC], callback_data=CALLBACK_BUTTON60_MPC),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON62_MPC_PLAY], callback_data=CALLBACK_BUTTON62_MPC_PLAY),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON66_MPC_BACKWARD_SMALL],
-								 callback_data=CALLBACK_BUTTON66_MPC_BACKWARD_SMALL),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON63_MPC_FORWARD_SMALL],
-								 callback_data=CALLBACK_BUTTON63_MPC_FORWARD_SMALL),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON68_MPC_BACKWARD_LARGE],
-								 callback_data=CALLBACK_BUTTON68_MPC_BACKWARD_LARGE),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON67_MPC_BACKWARD_MEDIUM],
-								 callback_data=CALLBACK_BUTTON67_MPC_BACKWARD_MEDIUM),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON64_MPC_FORWARD_MEDIUM],
-								 callback_data=CALLBACK_BUTTON64_MPC_FORWARD_MEDIUM),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON65_MPC_FORWARD_LARGE],
-								 callback_data=CALLBACK_BUTTON65_MPC_FORWARD_LARGE),
-		],
-	]
-	return InlineKeyboardMarkup(keyboard)
-
-
-def get_system_inline_keyboard():
-	keyboard = [
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON14_SOUND], callback_data=CALLBACK_BUTTON14_SOUND),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON20_SCREEN], callback_data=CALLBACK_BUTTON20_SCREEN),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON60_MPC], callback_data=CALLBACK_BUTTON60_MPC),
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON40_SYSTEM], callback_data=CALLBACK_BUTTON40_SYSTEM),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON41_SYSTEM_SHUTDOWN],
-								 callback_data=CALLBACK_BUTTON41_SYSTEM_SHUTDOWN),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON42_SYSTEM_REBOOT],
-								 callback_data=CALLBACK_BUTTON42_SYSTEM_REBOOT),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION],
-								 callback_data=CALLBACK_BUTTON43_SYSTEM_LOCKWORKSTATION),
-		],
-		[
-			InlineKeyboardButton(TITLES[CALLBACK_BUTTON44_SYSTEM_TSDISCON],
-								 callback_data=CALLBACK_BUTTON44_SYSTEM_TSDISCON),
-		],
-	]
-	return InlineKeyboardMarkup(keyboard)
+from config import *
+from keyboard import *
 
 
 def message_handler(update: Update, context: CallbackContext):
@@ -329,19 +99,19 @@ def message_handler(update: Update, context: CallbackContext):
 	if (command == '/system'):
 		update.message.reply_text(text="Панель управления системой", reply_markup=get_system_inline_keyboard(), )
 
-	if (command == '/shutdown xxxxxxxx'):  # Вместо xxxxxxxx подставить свой пароль
+	if (command == '/shutdown ' + password):
 		subprocess.Popen(shutdown, shell=True)
 		update.message.reply_text(text="Выключил компьютер", reply_markup=get_system_inline_keyboard(), )
 
-	if (command == '/reboot xxxxxxxx'):  # Вместо xxxxxxxx подставить свой пароль
+	if (command == '/reboot ' + password):
 		subprocess.Popen(reboot, shell=True)
 		update.message.reply_text(text="Перезагрузил компьютер", reply_markup=get_system_inline_keyboard(), )
 
-	if (command == '/lock xxxxxxxx'):  # Вместо xxxxxxxx подставить свой пароль
+	if (command == '/lock ' + password):
 		subprocess.Popen(lockworkstation, shell=True)
 		update.message.reply_text(text="Заблокировал компьютер", reply_markup=get_system_inline_keyboard(), )
 
-	if (command == '/change_user xxxxxxxx'):  # Вместо xxxxxxxx подставить свой пароль
+	if (command == '/change_user ' + password):
 		subprocess.Popen(tsdiscon, shell=True)
 		update.message.reply_text(text="Вышел в меню смены пользователя", reply_markup=get_system_inline_keyboard(), )
 
@@ -620,7 +390,7 @@ def main():
 	bot = Bot(
 		token=TG_TOKEN,
 		request=req,
-		base_url="https://telegg.ru/orig/bot",
+		#base_url="https://telegg.ru/orig/bot", # proxy для работы в РФ
 		)
 	updater = Updater(
 		bot=bot,
@@ -638,30 +408,6 @@ def main():
 	print('Finish')
 
 
-switch_sound = 'nircmd.exe mutesysvolume 2'
-sound10 = 'nircmd.exe setsysvolume 6553'
-sound20 = 'nircmd.exe setsysvolume 13106'
-sound30 = 'nircmd.exe setsysvolume 19659'
-sound40 = 'nircmd.exe setsysvolume 26212'
-sound50 = 'nircmd.exe setsysvolume 32765'
-sound60 = 'nircmd.exe setsysvolume 39318'
-sound70 = 'nircmd.exe setsysvolume 45871'
-sound80 = 'nircmd.exe setsysvolume 52424'
-sound90 = 'nircmd.exe setsysvolume 58977'
-sound100 = 'nircmd.exe setsysvolume 65535'
-increase = 'nircmd.exe changesysvolume 655'
-decrease = 'nircmd.exe changesysvolume -655'
-screen_saver = 'nircmd.exe monitor off'
-monitor_on = 'MultiMonitorTool.exe /TurnOn 1'
-monitor_off = 'MultiMonitorTool.exe /TurnOff 1'
-monitor2_on = 'MultiMonitorTool.exe /TurnOn 5'
-monitor2_off = 'MultiMonitorTool.exe /TurnOff 5'
-monitors_on = 'MultiMonitorTool.exe /TurnOn 1 5'
-monitors_off = 'MultiMonitorTool.exe /TurnOff 1 5'
-tsdiscon = 'tsdiscon'
-lockworkstation = 'rundll32.exe User32.dll,LockWorkStation'
-shutdown = 'Shutdown.exe -s -t 00'
-reboot = 'Shutdown.exe -r -t 00'
 
 if __name__ == '__main__':
 	main()
