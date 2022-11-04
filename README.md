@@ -8,7 +8,10 @@
 pip3 install python-telegram-bot==12.1.0
 pip3 install pyautogui 
 ```
-- подставить в `TG_TOKEN` свое значение Bot API, которое нужно получить у бота @BotFather
+- изменить файл `config.py`
+  - подставить в `TG_TOKEN` свое значение Bot API, которое нужно получить у бота @BotFather
+  - подставить в `CALLBACK_USER_ID` свой Telegram User ID, который можно узнать у бота @getmyid_bot
+  - изменить свой пароль в значении `password`, чтобы никто не смог случайно перезагрузить ваш компьютер (защита от дураков)
 - скачать NirCmd с [официального сайта](http://www.nirsoft.net/utils/nircmd.html) и разместить `nircmd.exe` в папке с ботом
 - скачать MultiMonitorTool с [официального сайта](https://www.nirsoft.net/utils/multi_monitor_tool.html) и разместить `MultiMonitorTool.exe` в папке с ботом
 - запустить самого бота 
